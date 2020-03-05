@@ -12,31 +12,31 @@ namespace LightspeedNET
 {
     public class Lightspeed
     {
-        public LSAuthenticator Authenticator { get; set; }
+        public LSAuthenticator AuthenticationClient { get; set; }
         public lsAccount lsAccount { get; private set; }
 
         public Lightspeed(string clientID, string clientSecret)
         {
             var auth = new LSAuthenticator(clientID, clientSecret);
-            Authenticator = auth;
-            Authenticator.OnAuthComplete += GetLightspeedAccount;
+            AuthenticationClient = auth;
+            AuthenticationClient.OnAuthComplete += GetLightspeedAccount;
             
         }
         public Lightspeed(string clientID, string clientSecret, Account account)
         {
             var auth = new LSAuthenticator(clientID, clientSecret, account);
-            Authenticator = auth;
+            AuthenticationClient = auth;
             GetLightspeedAccount();
             
 
         }
         public void GetLightspeedAccount()
         {
-            var acc = Authenticator.Account;
-            var request = new OAuth2RefreshRequest(Authenticator.Authenticator, "GET",
+            var acc = AuthenticationClient.Account;
+            var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
                                                 new Uri("https://cloud.lightspeedapp.com/API/Account")
                                                 , null, ref acc);
-            Authenticator.Account = acc;
+            AuthenticationClient.Account = acc;
             var task = Task.Run(async () => await request.GetResponseAsync());
             var response = task.Result;
 
@@ -53,14 +53,14 @@ namespace LightspeedNET
         
         public void UpdateAccount(Account account)
         {
-            Authenticator.Account = account;
+            AuthenticationClient.Account = account;
         }
 
         public Order[] GetOrders()
         {
             var request = new OAuth2Request("GET",
    new Uri($"https://cloud.lightspeedapp.com/API/Account/{lsAccount.AccountID}/Order")
-   , null, Authenticator.Account);
+   , null, AuthenticationClient.Account);
             var task = Task.Run(async () => await request.GetResponseAsync());
             var response = task.Result;
             var content = response.GetResponseText();
@@ -72,11 +72,11 @@ namespace LightspeedNET
 
         public Item GetItem(string SKU)
         {
-            var acc = Authenticator.Account;
-            var request = new OAuth2RefreshRequest(Authenticator.Authenticator, "GET",
+            var acc = AuthenticationClient.Account;
+            var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
    new Uri($"https://cloud.lightspeedapp.com/API/Account/{lsAccount.AccountID}/Item/?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]")
    , null, ref acc);
-            Authenticator.Account = acc;
+            AuthenticationClient.Account = acc;
             var task = Task.Run(async () => await request.GetResponseAsync());
             var response = task.Result;
             var content = response.GetResponseText();

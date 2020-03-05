@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Xml.Serialization;
-using Foundation;
-using UIKit;
+
 
 namespace LightspeedNET.Models.Common
 {
@@ -32,13 +31,6 @@ namespace LightspeedNET.Models.Common
         public string getImageUrl()
         {
             return $"{BaseImageURL}/{PublicID}.png";
-        }
-
-        public UIImage toUIImage()
-        {
-            using (var url = new NSUrl(getImageUrl()))
-            using (var data = NSData.FromUrl(url))
-                return UIImage.LoadFromData(data);
         }
 
     }

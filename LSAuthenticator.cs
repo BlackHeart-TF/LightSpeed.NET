@@ -1,5 +1,5 @@
 ﻿using System;
-using UIKit;
+
 using Xamarin.Auth;
 
 namespace LightspeedNET
@@ -39,24 +39,24 @@ namespace LightspeedNET
             return auth;
         }
 
-        internal UIViewController Controller;
-        public void ShowLoginPrompt(UIViewController viewController)
-        {
-            Controller = viewController;
-            var ui =  Authenticator.GetUI();
-            Controller.PresentViewController(ui, true, null);
-        }
+        //internal UIViewController Controller;
+        //public void ShowLoginPrompt(UIViewController viewController)
+        //{
+        //    Controller = viewController;
+        //    var ui =  Authenticator.GetUI();
+        //    Controller.PresentViewController(ui, true, null);
+        //}
 
         private void Auth_Completed(object sender, AuthenticatorCompletedEventArgs e)
         {
             if (e.IsAuthenticated)
             {
                 Account = e.Account;
-                if (Controller != null)
-                {
-                    Controller.DismissViewController(true, null);
-                    Controller = null;
-                }
+                //if (Controller != null)
+                //{
+                //    Controller.DismissViewController(true, null);
+                //    Controller = null;
+                //}
                 OnAuthComplete();
                 //Controller.PerformSegue("ToTheAPP", Controller);
             }
