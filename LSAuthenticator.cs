@@ -7,7 +7,8 @@ namespace LightspeedNET
     public class LSAuthenticator
     {
         public OAuth2Authenticator Authenticator { get; set; }
-        public Account Account { get; set; }
+        private Account _account;
+        public Account Account { get { return _account; } set { if (!value.Properties.ContainsKey("refresh_token")) throw new NullReferenceException(message: "No refresh token"); else _account = value; }}
         public delegate void AuthComplete();
         public event AuthComplete OnAuthComplete;
         public delegate void AuthFailed();
@@ -27,13 +28,13 @@ namespace LightspeedNET
         private OAuth2Authenticator BuildAuthenticator(string clientID, string clientSecret)
         {
             var auth = new OAuth2Authenticator(
-    clientId: clientID,
-    clientSecret: clientSecret,
-    scope: "employee:all",
-    authorizeUrl: new Uri("https://cloud.lightspeedapp.com/oauth/authorize.php"),
-    redirectUrl: new Uri("https://localhost/"),
-    accessTokenUrl: new Uri("https://cloud.lightspeedapp.com/oauth/access_token.php")
-    );
+                clientId: clientID,
+                clientSecret: clientSecret,
+                scope: "employee:all",
+                authorizeUrl: new Uri("https://cloud.lightspeedapp.com/oauth/authorize.php"),
+                redirectUrl: new Uri("https://localhost/"),
+                accessTokenUrl: new Uri("https://cloud.lightspeedapp.com/oauth/access_token.php")
+            );
             auth.AccessTokenName = "code";
             auth.Completed += Auth_Completed;
             return auth;
@@ -57,10 +58,15 @@ namespace LightspeedNET
                 //    Controller.DismissViewController(true, null);
                 //    Controller = null;
                 //}
-                OnAuthComplete();
+                if (OnAuthComplete != null)
+                    OnAuthComplete();
                 //Controller.PerformSegue("ToTheAPP", Controller);
             }
-            else OnAuthFailed();
+
+            else
+            if (OnAuthFailed != null)
+                OnAuthFailed();
+            
         }
     }
 }
