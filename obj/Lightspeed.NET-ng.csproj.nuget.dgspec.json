@@ -149,9 +149,6 @@
             "projectReferences": {
               "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/Core/Xamarin.Auth.NetStandard16/Xamarin.Auth.NetStandard16.csproj": {
                 "projectPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/Core/Xamarin.Auth.NetStandard16/Xamarin.Auth.NetStandard16.csproj"
-              },
-              "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/Xamarin.Auth.Forms.NetStandard16.csproj": {
-                "projectPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/Xamarin.Auth.Forms.NetStandard16.csproj"
               }
             }
           }
@@ -169,64 +166,6 @@
               "target": "Package",
               "version": "[1.6.1, )",
               "autoReferenced": true
-            }
-          },
-          "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"
-        }
-      }
-    },
-    "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/Xamarin.Auth.Forms.NetStandard16.csproj": {
-      "version": "1.0.0",
-      "restore": {
-        "projectUniqueName": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/Xamarin.Auth.Forms.NetStandard16.csproj",
-        "projectName": "Xamarin.Auth.XamarinForms",
-        "projectPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/Xamarin.Auth.Forms.NetStandard16.csproj",
-        "packagesPath": "/Users/bgpowersports/.nuget/packages/",
-        "outputPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/XamarinForms/Xamarin.Auth.Forms.NetStandard16/obj/",
-        "projectStyle": "PackageReference",
-        "configFilePaths": [
-          "/Users/bgpowersports/.config/NuGet/NuGet.Config"
-        ],
-        "originalTargetFrameworks": [
-          "netstandard1.6"
-        ],
-        "sources": {
-          "https://api.nuget.org/v3/index.json": {}
-        },
-        "frameworks": {
-          "netstandard1.6": {
-            "projectReferences": {
-              "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/Core/Xamarin.Auth.NetStandard16/Xamarin.Auth.NetStandard16.csproj": {
-                "projectPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Xamarin.Auth/source/Core/Xamarin.Auth.NetStandard16/Xamarin.Auth.NetStandard16.csproj"
-              }
-            }
-          }
-        },
-        "warningProperties": {
-          "warnAsError": [
-            "NU1605"
-          ]
-        }
-      },
-      "frameworks": {
-        "netstandard1.6": {
-          "dependencies": {
-            "NETStandard.Library": {
-              "target": "Package",
-              "version": "[1.6.1, )",
-              "autoReferenced": true
-            },
-            "System.Runtime": {
-              "target": "Package",
-              "version": "[4.3.1, )"
-            },
-            "System.Runtime.Extensions": {
-              "target": "Package",
-              "version": "[4.3.1, )"
-            },
-            "Xamarin.Forms": {
-              "target": "Package",
-              "version": "[4.0.0.471375, )"
             }
           },
           "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.102/RuntimeIdentifierGraph.json"

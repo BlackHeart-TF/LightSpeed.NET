@@ -22,10 +22,12 @@ namespace LightspeedNET
             AuthenticationClient.OnAuthComplete += GetLightspeedAccount;
             
         }
-        public Lightspeed(string clientID, string clientSecret, Account account)
+        public Lightspeed(string clientID, string clientSecret, Account account = null)
         {
+            
             var auth = new LSAuthenticator(clientID, clientSecret, account);
             AuthenticationClient = auth;
+            AuthenticationClient.OnAuthComplete += GetLightspeedAccount;
             GetLightspeedAccount();
             
 
@@ -89,6 +91,24 @@ namespace LightspeedNET
             return Item;
         }
 
+        public Item SearchItem(string Query)
+        {
+            var acc = AuthenticationClient.Account;
+            var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
+   new Uri($"https://cloud.lightspeedapp.com/API/Account/{lsAccount.AccountID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]")
+   , null, ref acc);
+            AuthenticationClient.Account = acc;
+            var task = Task.Run(async () => await request.GetResponseAsync());
+            var response = task.Result;
+            var content = response.GetResponseText();
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(content);
+            var elem = doc.DocumentElement.FirstChild.OuterXml;
+            TextReader TextReader = new StringReader(elem);
+            var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
+            var Item = (Item)Deserializer.Deserialize(TextReader);
+            return Item;
+        }
     }
     
 }

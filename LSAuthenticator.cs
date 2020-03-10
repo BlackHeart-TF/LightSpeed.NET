@@ -8,11 +8,19 @@ namespace LightspeedNET
     {
         public OAuth2Authenticator Authenticator { get; set; }
         private Account _account;
-        public Account Account { get { return _account; } set { if (!value.Properties.ContainsKey("refresh_token")) throw new NullReferenceException(message: "No refresh token"); else _account = value; }}
         public delegate void AuthComplete();
         public event AuthComplete OnAuthComplete;
         public delegate void AuthFailed();
         public event AuthFailed OnAuthFailed;
+
+        public Account Account
+        { get
+            { return _account; }
+          set
+            { if (!value.Properties.ContainsKey("refresh_token"))
+                    value.Properties.Add("refresh_token", _account.Properties["refresh_token"]);
+              else _account = value; } }
+
 
         public LSAuthenticator(string clientID, string clientSecret, Account account)
         {
