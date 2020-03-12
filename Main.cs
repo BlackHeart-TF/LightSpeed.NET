@@ -26,8 +26,9 @@ namespace LightspeedNET
         {
             
             var auth = new LSAuthenticator(clientID, clientSecret, account);
+            auth.OnAuthComplete += GetLightspeedAccount;
             AuthenticationClient = auth;
-            AuthenticationClient.OnAuthComplete += GetLightspeedAccount;
+            //AuthenticationClient.OnAuthComplete += GetLightspeedAccount;
             GetLightspeedAccount();
             
 
@@ -50,6 +51,7 @@ namespace LightspeedNET
             TextReader TextReader = new StringReader(content);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(lsAccounts));
             this.lsAccount = ((lsAccounts)Deserializer.Deserialize(TextReader)).Account[0];
+            
         }
         
         

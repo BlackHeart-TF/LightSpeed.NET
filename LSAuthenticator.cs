@@ -61,14 +61,9 @@ namespace LightspeedNET
             if (e.IsAuthenticated)
             {
                 Account = e.Account;
-                //if (Controller != null)
-                //{
-                //    Controller.DismissViewController(true, null);
-                //    Controller = null;
-                //}
+
                 if (OnAuthComplete != null)
                     OnAuthComplete();
-                //Controller.PerformSegue("ToTheAPP", Controller);
             }
 
             else
