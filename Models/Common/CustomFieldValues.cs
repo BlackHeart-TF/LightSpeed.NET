@@ -38,4 +38,11 @@ namespace LightspeedNET.Models.Common
         [XmlElement("customFieldID")]
         public int customFieldID { get; set; }
     }
+
+    [XmlType("CustomFieldChoices")]
+    public class CustomFieldValues
+    {
+        [XmlElement("CustomFieldChoice")]
+        public Value[] CustomFieldChoices;
+    }
 }

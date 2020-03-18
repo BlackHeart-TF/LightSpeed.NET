@@ -8,4 +8,7 @@
     <ProjectReference Include="..\Xamarin.Auth\source\Core\Xamarin.Auth.NetStandard16\Xamarin.Auth.NetStandard16.csproj" />
     <ProjectReference Include="..\Xamarin.Auth\source\Extensions\Xamarin.Auth.Extensions.NetStandard16\Xamarin.Auth.Extensions.NetStandard16.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Extentions\" />
+  </ItemGroup>
 </Project>
