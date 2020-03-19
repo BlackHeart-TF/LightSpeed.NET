@@ -44,5 +44,6 @@ namespace LightspeedNET.Models.Common
     {
         [XmlElement("CustomFieldChoice")]
         public Value[] CustomFieldChoices;
+
     }
 }

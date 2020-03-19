@@ -132,7 +132,7 @@ namespace LightspeedNET
             }
         }
 
-        public int GetCFChoiceID(int customFieldID, string ChoiceName)
+        public KeyValuePair<string, int>? GetCFChoiceID(int customFieldID, string ChoiceName)
         {
             var acc = AuthenticationClient.Account;
             var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
@@ -145,8 +145,15 @@ namespace LightspeedNET
             TextReader TextReader = new StringReader(content);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFieldValues));
             var CFVs = (CustomFieldValues)Deserializer.Deserialize(TextReader);
-            var ss = CFVs.CustomFieldChoices.Where(x => x.Name == ChoiceName).First().CustomFieldChoiceID;
-            return ss;
+            var ss = CFVs.CustomFieldChoices.Where(x => x.Name == ChoiceName);
+            var id = 0;
+            if (ss.Count() > 0)
+            {
+                id = ss.First().CustomFieldChoiceID;
+                return new KeyValuePair<string, int>(ChoiceName, id);
+            }
+
+            return null;
         }
     }
 }
