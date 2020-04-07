@@ -83,6 +83,8 @@ namespace LightspeedNET.Models.Common
         public CustomFieldValue[] CustomFieldValues { get; set; }
         [XmlArray("Images")]
         public Image[] Images { get; set; }
+        [XmlIgnore]
+        public string FirstImage { get { return Images[0].getImageUrl(); } }
 
 
 

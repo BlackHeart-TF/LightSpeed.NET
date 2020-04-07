@@ -40,10 +40,10 @@ namespace LightspeedNET.Models.Common
     }
 
     [XmlType("CustomFieldChoices")]
-    public class CustomFieldValues
+    public class CustomFieldChoices
     {
         [XmlElement("CustomFieldChoice")]
-        public Value[] CustomFieldChoices;
+        public Value[] CustomFieldChoice;
 
     }
 }

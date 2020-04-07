@@ -143,9 +143,9 @@ namespace LightspeedNET
             var response = task.Result;
             var content = response.GetResponseText();
             TextReader TextReader = new StringReader(content);
-            var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFieldValues));
-            var CFVs = (CustomFieldValues)Deserializer.Deserialize(TextReader);
-            var ss = CFVs.CustomFieldChoices.Where(x => x.Name == ChoiceName);
+            var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFieldChoices));
+            var CFVs = (CustomFieldChoices)Deserializer.Deserialize(TextReader);
+            var ss = CFVs.CustomFieldChoice.Where(x => x.Name == ChoiceName);
             var id = 0;
             if (ss.Count() > 0)
             {
@@ -154,6 +154,23 @@ namespace LightspeedNET
             }
 
             return null;
+        }
+
+        public CustomFieldValue[] GetCustomFields()
+        {
+            var acc = AuthenticationClient.Account;
+            var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
+   new Uri($"https://api.lightspeedapp.com/API/Account/196557/Item/CustomField/")
+   , null, ref acc);
+            AuthenticationClient.Account = acc;
+            var task = Task.Run(async () => await request.GetResponseAsync());
+            var response = task.Result;
+            var content = response.GetResponseText();
+            TextReader TextReader = new StringReader(content);
+            var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFields));
+            var CFVs = (CustomFields)Deserializer.Deserialize(TextReader);
+
+            return CFVs.CustomField ;
         }
     }
 }
