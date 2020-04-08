@@ -132,7 +132,7 @@ namespace LightspeedNET
             }
         }
 
-        public KeyValuePair<string, int>? GetCFChoiceID(int customFieldID, string ChoiceName)
+        public int GetCFChoiceID(int customFieldID, string ChoiceName)
         {
             var acc = AuthenticationClient.Account;
             var request = new OAuth2RefreshRequest(AuthenticationClient.Authenticator, "GET",
@@ -150,10 +150,10 @@ namespace LightspeedNET
             if (ss.Count() > 0)
             {
                 id = ss.First().CustomFieldChoiceID;
-                return new KeyValuePair<string, int>(ChoiceName, id);
+                return id;
             }
 
-            return null;
+            return 0;
         }
 
         public CustomFieldValue[] GetCustomFields()
