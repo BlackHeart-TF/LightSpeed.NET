@@ -19,7 +19,7 @@ namespace LightspeedNET
           set
             { if (!value.Properties.ContainsKey("refresh_token"))
                     value.Properties.Add("refresh_token", _account.Properties["refresh_token"]);
-              else _account = value; } }
+              _account = value; } }
 
 
         public LSAuthenticator(string clientID, string clientSecret, Account account)
@@ -48,13 +48,6 @@ namespace LightspeedNET
             return auth;
         }
 
-        //internal UIViewController Controller;
-        //public void ShowLoginPrompt(UIViewController viewController)
-        //{
-        //    Controller = viewController;
-        //    var ui =  Authenticator.GetUI();
-        //    Controller.PresentViewController(ui, true, null);
-        //}
 
         private void Auth_Completed(object sender, AuthenticatorCompletedEventArgs e)
         {
