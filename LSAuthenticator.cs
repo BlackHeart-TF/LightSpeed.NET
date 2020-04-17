@@ -1,68 +1,140 @@
 ﻿using System;
-
-using Xamarin.Auth;
+using System.Collections.Generic;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web;
+using LightspeedNET.Extentions;
+using Newtonsoft.Json;
 
 namespace LightspeedNET
 {
     public class LSAuthenticator
     {
-        public OAuth2Authenticator Authenticator { get; set; }
-        private Account _account;
+        private string _clientID;
+        private string _clientSecret;
+        private string _AccessToken;
+        public string _RefreshToken;
+        private DateTime _ExpiresOn;
+
         public delegate void AuthComplete();
         public event AuthComplete OnAuthComplete;
         public delegate void AuthFailed();
         public event AuthFailed OnAuthFailed;
 
-        public Account Account
-        { get
-            { return _account; }
-          set
-            { if (!value.Properties.ContainsKey("refresh_token"))
-                    value.Properties.Add("refresh_token", _account.Properties["refresh_token"]);
-              _account = value; } }
+        private static readonly HttpClient client = new HttpClient();
 
-
-        public LSAuthenticator(string clientID, string clientSecret, Account account)
+        public LSAuthenticator(string clientID, string clientSecret)
         {
-            Account = account;
-            Authenticator = BuildAuthenticator(clientID, clientSecret);
+            _clientID = clientID;
+            _clientSecret = clientSecret;
         }
 
-            public LSAuthenticator(string clientID, string clientSecret)
+        public void Login(string email, string password)
         {
-            Authenticator = BuildAuthenticator(clientID, clientSecret);
-            
-        }
-        private OAuth2Authenticator BuildAuthenticator(string clientID, string clientSecret)
-        {
-            var auth = new OAuth2Authenticator(
-                clientId: clientID,
-                clientSecret: clientSecret,
-                scope: "employee:all",
-                authorizeUrl: new Uri("https://cloud.lightspeedapp.com/oauth/authorize.php"),
-                redirectUrl: new Uri("https://localhost/"),
-                accessTokenUrl: new Uri("https://cloud.lightspeedapp.com/oauth/access_token.php")
-            );
-            auth.AccessTokenName = "code";
-            auth.Completed += Auth_Completed;
-            return auth;
-        }
-
-
-        private void Auth_Completed(object sender, AuthenticatorCompletedEventArgs e)
-        {
-            if (e.IsAuthenticated)
+            var Headers = new Dictionary<string, string>();
+            Headers.Add("client_id", _clientID);
+            Headers.Add("client_secret", _clientSecret);
+            Headers.Add("grant_type", "password");
+            Headers.Add("response_type", "code");
+            Headers.Add("username", email);
+            Headers.Add("password", password);
+            Headers.Add("Accept", "application/json");
+            var EncHeaders = new FormUrlEncodedContent(Headers);
+            var response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token_v2.php", EncHeaders)).Result;
+            switch (response.StatusCode)
             {
-                Account = e.Account;
+                case HttpStatusCode.Unauthorized:
+                    if (OnAuthFailed != null)
+                    OnAuthFailed();
+                    break;
 
-                if (OnAuthComplete != null)
-                    OnAuthComplete();
+                case HttpStatusCode.OK:
+                    var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
+                    var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+                    _AccessToken = Authy["access_token"];
+                    _RefreshToken = Authy["refresh_token"];
+                    _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
+                    if (OnAuthComplete != null)
+                        OnAuthComplete();
+                    break;
+                default:
+
+                    break;
             }
-
-            else
-            if (OnAuthFailed != null)
-                OnAuthFailed();
             
         }
+
+        public string Request(string url)
+        {
+            if (_ExpiresOn < DateTime.Now)
+            {
+                Refresh();
+            }
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
+            client.DefaultRequestHeaders.Add("Accept", "application/xml");
+
+            var response = Task.Run(async () => await client.GetAsync(url)).Result;
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    if (OnAuthFailed != null)
+                        OnAuthFailed();
+                    else
+                        throw new NotAuthorizedException();
+                    break;
+
+                case HttpStatusCode.Accepted:
+                default:
+
+                    break;
+            }
+            var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
+            return content;
+        }
+
+        private void Refresh()
+        {
+            var Headers = new Dictionary<string, string>();
+            Headers.Add("client_id", _clientID);
+            Headers.Add("client_secret", _clientSecret);
+            Headers.Add("grant_type", "refresh_token");
+            Headers.Add("Accept", "application/json");
+            Headers.Add("refresh_token", _RefreshToken);
+            var EncHeaders = new FormUrlEncodedContent(Headers);
+            var response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token.php", EncHeaders)).Result;
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    if (OnAuthFailed != null)
+                        OnAuthFailed();
+                    break;
+
+                case HttpStatusCode.OK:
+                    var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
+                    var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
+                    _AccessToken = Authy["access_token"];
+                    _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
+                    if (OnAuthComplete != null)
+                        OnAuthComplete();
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+        public string getAuthorizationHeader()
+        {
+            return "Bearer " + _AccessToken;
+        }
+    }
+
+    public class NotAuthorizedException : Exception {
+        public NotAuthorizedException()
+        {
+        }
+
     }
 }

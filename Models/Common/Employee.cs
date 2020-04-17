@@ -34,8 +34,8 @@ namespace LightspeedNET.Models.Common
         public int LastRegisterID { get; set; }
         [XmlElement("Contact")]
         public Contact Contact { get; set; }
-        [XmlElement("EmployeeRole")]
-        public EmployeeRole EmployeeRole { get; set; }
+        [XmlArray("EmployeeRoles")]
+        public EmployeeRole[] EmployeeRole { get; set; }
         [XmlElement("EmplyeeRights")]
         public EmployeeRights EmployeeRights { get; set; }
         [XmlElement("timeStamp")]

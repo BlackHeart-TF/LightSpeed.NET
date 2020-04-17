@@ -4,7 +4,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using LightspeedNET.Models.Common;
-using Xamarin.Auth;
 
 namespace LightspeedNET
 {
@@ -14,16 +13,9 @@ namespace LightspeedNET
 
         public static Item GetItem(string SKU)
         {
-            var acc = Lightspeed.AuthenticationClient.Account;
-            var request = new OAuth2RefreshRequest(Lightspeed.AuthenticationClient.Authenticator, "GET",
-   new Uri($"https://cloud.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Item?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]")
-   , null, ref acc);
-            Lightspeed.AuthenticationClient.Account = acc;
-            var task = Task.Run(async () => await request.GetResponseAsync());
-            var response = task.Result;
-            var content = response.GetResponseText();
+            var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(content);
+            doc.LoadXml(response);
             var elem = doc.DocumentElement.FirstChild.OuterXml;
             TextReader TextReader = new StringReader(elem);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
@@ -45,23 +37,16 @@ namespace LightspeedNET
 
             using (var client = new System.Net.WebClient())
             {
-                client.Headers.Add("Authorization", OAuth2Request.GetAuthorizationHeader(Lightspeed.AuthenticationClient.Account));
+                client.Headers.Add("Authorization", Lightspeed.AuthenticationClient.getAuthorizationHeader());
                 client.UploadData($"https://api.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/{item.ItemID}", "PUT", data);
             }
         }
 
         public static Item SearchItem(string Query)
         {
-            var acc = Lightspeed.AuthenticationClient.Account;
-            var request = new OAuth2RefreshRequest(Lightspeed.AuthenticationClient.Authenticator, "GET",
-   new Uri($"https://cloud.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]")
-   , null, ref acc);
-            Lightspeed.AuthenticationClient.Account = acc;
-            var task = Task.Run(async () => await request.GetResponseAsync());
-            var response = task.Result;
-            var content = response.GetResponseText();
+            var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
-            doc.LoadXml(content);
+            doc.LoadXml(response);
             var elem = doc.DocumentElement.FirstChild.OuterXml;
             TextReader TextReader = new StringReader(elem);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
@@ -69,6 +54,4 @@ namespace LightspeedNET
             return Item;
         }
     }
-
-   
 }
