@@ -22,105 +22,100 @@ namespace LightspeedNET.Models
         public int ShopCount { get; set; }
         [XmlElement("Employee")]
         public Employee Employee { get; set; }
-        
-
         [XmlElement("Rights")]
-        public Dictionary<string, bool> Rights
-        {
-            get; set;
-        }
+        public Rights Rights { get; set; }
     }
 
     [XmlType("Rights")]
     public class Rights
     {
         [XmlElement("admin")]
-        public bool admin { get; set; }
+        public bool Admin { get; set; }
         [XmlElement("admin_employees")]
-        public bool admin_employees { get; set; }
+        public bool EmployeesAdmin { get; set; }
         [XmlElement("admin_inventory")]
-        public bool admin_inventory { get; set; }
+        public bool InventoryAdmin { get; set; }
         [XmlElement("admin_purchases")]
-        public bool admin_purchases { get; set; }
+        public bool PurchasesAdmin { get; set; }
         [XmlElement("admin_shops")]
-        public bool admin_shops { get; set; }
+        public bool ShopsAdmin { get; set; }
         [XmlElement("admin_void_sale")]
-        public bool admin_void_sale { get; set; }
+        public bool VoidSaleAdmin { get; set; }
         [XmlElement("allow_login")]
-        public bool allow_login { get; set; }
+        public bool AllowLogin { get; set; }
         [XmlElement("categories")]
-        public bool categories { get; set; }
+        public bool Categories { get; set; }
         [XmlElement("customers")]
-        public bool customers { get; set; }
+        public bool Customers { get; set; }
         [XmlElement("customers_credit_limit")]
-        public bool customers_credit_limit { get; set; }
+        public bool CustomersCreditLimit { get; set; }
         [XmlElement("customers_export")]
-        public bool customers_export { get; set; }
+        public bool ExportCustomers { get; set; }
         [XmlElement("customers_read")]
-        public bool customers_read { get; set; }
+        public bool ReadCustomers { get; set; }
         [XmlElement("customers_view_gift_card_numbers")]
-        public bool customers_view_gift_card_numbers { get; set; }
+        public bool CustomersViewGiftCardNumbers { get; set; }
         [XmlElement("ecom")]
-        public bool ecom { get; set; }
+        public bool ECom { get; set; }
         [XmlElement("inventory_base")]
-        public bool inventory_base { get; set; }
+        public bool InventoryBase { get; set; }
         [XmlElement("inventory_counts")]
-        public bool inventory_counts { get; set; }
+        public bool InventoryCounts { get; set; }
         [XmlElement("inventory_counts_reconcile")]
-        public bool inventory_counts_reconcile { get; set; }
+        public bool InventoryCountsReconcile { get; set; }
         [XmlElement("inventory_import")]
-        public bool inventory_import { get; set; }
+        public bool InventoryImport { get; set; }
         [XmlElement("inventory_read")]
-        public bool inventory_read { get; set; }
+        public bool InventoryRead { get; set; }
         [XmlElement("manufacturers")]
-        public bool manufacturers { get; set; }
+        public bool Manufacturers { get; set; }
         [XmlElement("product_cost")]
-        public bool product_cost { get; set; }
+        public bool ProductCost { get; set; }
         [XmlElement("product_edit")]
-        public bool product_edit { get; set; }
+        public bool ProductEdit { get; set; }
         [XmlElement("purchase_orders")]
-        public bool purchase_orders { get; set; }
+        public bool PurchaseOrders { get; set; }
         [XmlElement("purchase_orders_receive")]
-        public bool purchase_orders_receive { get; set; }
+        public bool PurchaseOrdersReceive { get; set; }
         [XmlElement("register")]
-        public bool register { get; set; }
+        public bool Register { get; set; }
         [XmlElement("register_catalogs")]
-        public bool register_catalogs { get; set; }
+        public bool RegisterCatalogs { get; set; }
         [XmlElement("register_close")]
-        public bool register_close { get; set; }
+        public bool RegisterClose { get; set; }
         [XmlElement("register_layaway")]
-        public bool register_layaway { get; set; }
+        public bool RegisterLayaway { get; set; }
         [XmlElement("register_line_discount")]
-        public bool register_line_discount { get; set; }
+        public bool RegisterLineDiscount { get; set; }
         [XmlElement("register_open")]
-        public bool register_open { get; set; }
+        public bool RegisterOpen { get; set; }
         [XmlElement("register_price")]
-        public bool register_price { get; set; }
+        public bool RegisterPrice { get; set; }
         [XmlElement("register_read")]
-        public bool register_read { get; set; }
+        public bool RegisterRead { get; set; }
         [XmlElement("register_refund")]
-        public bool register_refund { get; set; }
+        public bool RegisterRefund { get; set; }
         [XmlElement("register_transaction_discount")]
-        public bool register_transaction_discount { get; set; }
+        public bool RegisterTransactionDiscount { get; set; }
         [XmlElement("register_withdraw")]
-        public bool register_withdraw { get; set; }
+        public bool RegisterWithdraw { get; set; }
         [XmlElement("reports")]
-        public bool reports { get; set; }
+        public bool Reports { get; set; }
         [XmlElement("special_orders")]
-        public bool special_orders { get; set; }
+        public bool SpecialOrders { get; set; }
         [XmlElement("tags")]
-        public bool tags { get; set; }
+        public bool Tags { get; set; }
         [XmlElement("transfers")]
-        public bool transfers { get; set; }
+        public bool Transfers { get; set; }
         [XmlElement("transfers_send_stock")]
-        public bool transfers_send_stock { get; set; }
+        public bool TransfersSendStock { get; set; }
         [XmlElement("vendor_returns")]
-        public bool vendor_returns { get; set; }
+        public bool VendorReturns { get; set; }
         [XmlElement("vendors")]
-        public bool vendors { get; set; }
+        public bool Vendors { get; set; }
         [XmlElement("vr_reasons")]
-        public bool vr_reasons { get; set; }
+        public bool VrReasons { get; set; }
         [XmlElement("workbench")]
-        public bool workbench { get; set; }
+        public bool Workbench { get; set; }
     }
 }
