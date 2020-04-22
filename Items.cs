@@ -2,6 +2,7 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 using System.Xml;
 using LightspeedNET.Models.Common;
 
@@ -9,13 +10,15 @@ namespace LightspeedNET
 {
     public static class Items
     {
-        
-
         public static Item GetItem(string SKU)
         {
             var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(response);
+            //check if an item was actually returned
+            var node = doc.SelectSingleNode("Items");
+            if (int.Parse(node.Attributes["count"].Value) <= 0)
+                return null;
             var elem = doc.DocumentElement.FirstChild.OuterXml;
             TextReader TextReader = new StringReader(elem);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
@@ -47,6 +50,11 @@ namespace LightspeedNET
             var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(response);
+            //check if an item was actually returned
+            var node = doc.SelectSingleNode("Items");
+            if (int.Parse(node.Attributes["count"].Value) <= 0)
+                return null;
+
             var elem = doc.DocumentElement.FirstChild.OuterXml;
             TextReader TextReader = new StringReader(elem);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));

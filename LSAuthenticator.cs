@@ -14,7 +14,7 @@ namespace LightspeedNET
     {
         private string _clientID;
         private string _clientSecret;
-        private string _AccessToken;
+        public string _AccessToken;
         public string _RefreshToken;
         private DateTime _ExpiresOn;
 
