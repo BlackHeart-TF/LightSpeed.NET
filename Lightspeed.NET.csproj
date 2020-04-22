@@ -1,14 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>LightspeedNET</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Xamarin.Auth\source\Core\Xamarin.Auth.NetStandard16\Xamarin.Auth.NetStandard16.csproj" />
-    <ProjectReference Include="..\Xamarin.Auth\source\Extensions\Xamarin.Auth.Extensions.NetStandard16\Xamarin.Auth.Extensions.NetStandard16.csproj" />
+    <Folder Include="Extentions\" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Extentions\" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 </Project>
