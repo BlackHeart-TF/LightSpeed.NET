@@ -85,7 +85,7 @@ namespace LightspeedNET
                         throw new NotAuthorizedException();
                     break;
 
-                case HttpStatusCode.Accepted:
+                case HttpStatusCode.OK:
                 default:
 
                     break;
