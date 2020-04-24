@@ -29,10 +29,13 @@ namespace LightspeedNET
         {
             _clientID = clientID;
             _clientSecret = clientSecret;
+            OnAuthFailed += delegate { Refresh(); };
         }
 
-        public void Login(string email, string password)
+        public void Login(string email, string password, string refresh = "")
         {
+            if (refresh != "")//the security holes are so real
+                _RefreshToken = refresh;
             var Headers = new Dictionary<string, string>();
             Headers.Add("client_id", _clientID);
             Headers.Add("client_secret", _clientSecret);
@@ -47,7 +50,9 @@ namespace LightspeedNET
             {
                 case HttpStatusCode.Unauthorized:
                     if (OnAuthFailed != null)
-                    OnAuthFailed();
+                        OnAuthFailed();
+                    else
+                        throw new BadAuthenticationRequestException();
                     break;
 
                 case HttpStatusCode.OK:
@@ -74,18 +79,21 @@ namespace LightspeedNET
             }
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
             client.DefaultRequestHeaders.Add("Accept", "application/xml");
-
+            badPractise:
             var response = Task.Run(async () => await client.GetAsync(url)).Result;
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
                     if (OnAuthFailed != null)
+                    {
                         OnAuthFailed();
+                        goto badPractise;
+                    }
                     else
-                        throw new NotAuthorizedException();
+                        throw new BadAuthenticationRequestException();
                     break;
-
-                case HttpStatusCode.OK:
+                     
+                case HttpStatusCode.OK:  
                 default:
 
                     break;
@@ -131,8 +139,8 @@ namespace LightspeedNET
         }
     }
 
-    public class NotAuthorizedException : Exception {
-        public NotAuthorizedException()
+    public class BadAuthenticationRequestException : Exception {
+        public BadAuthenticationRequestException()
         {
         }
 

@@ -31,9 +31,9 @@ namespace LightspeedNET
             AuthenticationClient.OnAuthComplete += delegate { GetLightspeedSession(); };
         }
 
-        public void Login(string email, string password)
+        public void Login(string email, string password, string refresh = "")
         {
-            AuthenticationClient.Login(email, password);
+            AuthenticationClient.Login(email, password, refresh);
         }
         public Session GetLightspeedSession()
         {
