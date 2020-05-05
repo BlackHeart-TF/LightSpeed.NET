@@ -1,5 +1,5 @@
 ﻿using System;
-using LightspeedNET.Models.Common;
+using LightspeedNET.Models;
 
 namespace LightspeedNET
 {

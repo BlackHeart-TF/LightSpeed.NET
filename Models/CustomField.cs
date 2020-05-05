@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace LightspeedNET.Models.Common
+namespace LightspeedNET.Models
 {
     [XmlType("CustomField")]
     public class CustomField

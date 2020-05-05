@@ -20,6 +20,8 @@ namespace LightspeedNET
 
         public delegate void AuthComplete();
         public event AuthComplete OnAuthComplete;
+        public delegate void AuthRefresh();
+        public event AuthRefresh OnRefresh;
         public delegate void AuthFailed();
         public event AuthFailed OnAuthFailed;
 
@@ -29,13 +31,17 @@ namespace LightspeedNET
         {
             _clientID = clientID;
             _clientSecret = clientSecret;
-            OnAuthFailed += delegate { Refresh(); };
         }
 
         public void Login(string email, string password, string refresh = "")
         {
             if (refresh != "")//the security holes are so real
                 _RefreshToken = refresh;
+            if (password == "pin")
+            {
+                Refresh();
+                email = _AccessToken + ':' + email;
+            }
             var Headers = new Dictionary<string, string>();
             Headers.Add("client_id", _clientID);
             Headers.Add("client_secret", _clientSecret);
@@ -56,6 +62,7 @@ namespace LightspeedNET
                     break;
 
                 case HttpStatusCode.OK:
+                    OnAuthFailed += delegate { Refresh(); };
                     var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
                     var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
                     _AccessToken = Authy["access_token"];
@@ -91,7 +98,7 @@ namespace LightspeedNET
                     }
                     else
                         throw new BadAuthenticationRequestException();
-                    break;
+                    //break;
                      
                 case HttpStatusCode.OK:  
                 default:
@@ -124,8 +131,8 @@ namespace LightspeedNET
                     var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
                     _AccessToken = Authy["access_token"];
                     _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
-                    if (OnAuthComplete != null)
-                        OnAuthComplete();
+                    if (OnRefresh != null)
+                        OnRefresh();
                     break;
                 default:
 

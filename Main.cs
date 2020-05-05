@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
-using LightspeedNET.Models.Common;
-using LightspeedNET.Extentions;
 using LightspeedNET.Models;
+using LightspeedNET.Extentions;
 
 namespace LightspeedNET
 {
@@ -31,10 +30,6 @@ namespace LightspeedNET
             AuthenticationClient.OnAuthComplete += delegate { GetLightspeedSession(); };
         }
 
-        public void Login(string email, string password, string refresh = "")
-        {
-            AuthenticationClient.Login(email, password, refresh);
-        }
         public Session GetLightspeedSession()
         {
             var response = AuthenticationClient.Request(host+"/API/Session");

@@ -2,7 +2,7 @@
 using System.Xml.Serialization;
 
 
-namespace LightspeedNET.Models.Common
+namespace LightspeedNET.Models
 {
     [XmlType("Image")]
     public class Image
@@ -24,7 +24,7 @@ namespace LightspeedNET.Models.Common
         [XmlElement("itemMatrixID")]
         public int ItemMatrixID { get; set; }
         [XmlElement("Item")]
-        public LightspeedNET.Models.Common.Item Item { get; set; }
+        public LightspeedNET.Models.Item Item { get; set; }
         [XmlElement("ItemMatrix")]
         public ItemMatrix ItemMatrix { get; set; }
 

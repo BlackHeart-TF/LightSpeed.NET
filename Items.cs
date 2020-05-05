@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
 using System.Xml;
-using LightspeedNET.Models.Common;
+using LightspeedNET.Models;
 
 namespace LightspeedNET
 {

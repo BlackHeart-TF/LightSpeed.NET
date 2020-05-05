@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace LightspeedNET.Models.Common
+namespace LightspeedNET.Models
 {
     [XmlRoot(ElementName = "Shop")]
     public class Shop

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-namespace LightspeedNET.Models.Common
+namespace LightspeedNET.Models
 {
     [XmlType("Item")]
     public class Item

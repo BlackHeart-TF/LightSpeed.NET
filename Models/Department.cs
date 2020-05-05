@@ -1,4 +1,4 @@
-﻿namespace LightspeedNET.Models.Common
+﻿namespace LightspeedNET.Models
 {
     public class Department
     {
