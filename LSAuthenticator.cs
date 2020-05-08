@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using LightspeedNET.Extentions;
@@ -61,6 +62,13 @@ namespace LightspeedNET
                         throw new BadAuthenticationRequestException();
                     break;
 
+                case HttpStatusCode.BadRequest:
+                    if (OnAuthFailed != null)
+                        OnAuthFailed();
+                    else
+                        throw new BadAuthenticationRequestException();
+                    break;
+
                 case HttpStatusCode.OK:
                     OnAuthFailed += delegate { Refresh(); };
                     var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
@@ -78,7 +86,7 @@ namespace LightspeedNET
             
         }
 
-        public string Request(string url)
+        public string GetRequest(string url)
         {
             if (_ExpiresOn < DateTime.Now)
             {
@@ -86,8 +94,8 @@ namespace LightspeedNET
             }
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
             client.DefaultRequestHeaders.Add("Accept", "application/xml");
-            badPractise:
-            var response = Task.Run(async () => await client.GetAsync(url)).Result;
+        badPractise:
+            HttpResponseMessage response = Task.Run(async () => await client.GetAsync(url)).Result;
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
@@ -107,6 +115,37 @@ namespace LightspeedNET
             }
             var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
             return content;
+        }
+        public string PostRequest(string url, string content)
+        {
+            if (_ExpiresOn < DateTime.Now)
+            {
+                Refresh();
+            }
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
+            client.DefaultRequestHeaders.Add("Accept", "application/xml");
+            HttpContent cont = new StringContent(content, Encoding.UTF8, "application/xml");
+        badPractise:
+            HttpResponseMessage response = Task.Run(async () => await client.PostAsync(url, cont)).Result;
+            switch (response.StatusCode)
+            {
+                case HttpStatusCode.Unauthorized:
+                    if (OnAuthFailed != null)
+                    {
+                        OnAuthFailed();
+                        goto badPractise;
+                    }
+                    else
+                        throw new BadAuthenticationRequestException();
+                //break;
+
+                case HttpStatusCode.OK:
+                default:
+
+                    break;
+            }
+            var responseText = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
+            return responseText;
         }
 
         private void Refresh()

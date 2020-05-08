@@ -32,7 +32,7 @@ namespace LightspeedNET
 
         public Session GetLightspeedSession()
         {
-            var response = AuthenticationClient.Request(host+"/API/Session");
+            var response = AuthenticationClient.GetRequest(host+"/API/Session");
 
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Session));
@@ -41,7 +41,7 @@ namespace LightspeedNET
         }
         public Employee GetEmployee(int id)
         {
-            var response = AuthenticationClient.Request(host + $"/API/Account/{Session.SystemCustomerID}/Employee/{id}");
+            var response = AuthenticationClient.GetRequest(host + $"/API/Account/{Session.SystemCustomerID}/Employee/{id}");
 
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Employee));
@@ -51,7 +51,7 @@ namespace LightspeedNET
 
         public Order[] GetOrders()
         {
-            var response = AuthenticationClient.Request(host + $"/API/Account/{Session.SystemCustomerID}/Order");
+            var response = AuthenticationClient.GetRequest(host + $"/API/Account/{Session.SystemCustomerID}/Order");
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Orders));
             var Orders = (Orders)Deserializer.Deserialize(TextReader);
@@ -61,7 +61,7 @@ namespace LightspeedNET
 
         public int GetCFChoiceID(int customFieldID, string ChoiceName)
         {
-            var response = AuthenticationClient.Request(host + $"/API/Account/196557/Item/CustomField/{customFieldID}/CustomFieldChoice");
+            var response = AuthenticationClient.GetRequest(host + $"/API/Account/196557/Item/CustomField/{customFieldID}/CustomFieldChoice");
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFieldChoices));
             var CFVs = (CustomFieldChoices)Deserializer.Deserialize(TextReader);
@@ -78,7 +78,7 @@ namespace LightspeedNET
 
         public CustomFieldValue[] GetCustomFields()
         {
-            var response = AuthenticationClient.Request(host + $"/API/Account/196557/Item/CustomField/");
+            var response = AuthenticationClient.GetRequest(host + $"/API/Account/196557/Item/CustomField/");
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(CustomFields));
             var CFVs = (CustomFields)Deserializer.Deserialize(TextReader);

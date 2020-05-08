@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lightspeed.NET", "Lightspeed.NET.csproj", "{AA7F5DC6-0B9B-4D53-818D-C3CD40B2C153}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lightspeed.NET", "Lightspeed.NET-netstandard2.1.csproj", "{AA7F5DC6-0B9B-4D53-818D-C3CD40B2C153}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

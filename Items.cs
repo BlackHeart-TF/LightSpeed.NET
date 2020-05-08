@@ -12,7 +12,7 @@ namespace LightspeedNET
     {
         public static Item GetItem(string SKU)
         {
-            var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
+            var response = Lightspeed.AuthenticationClient.GetRequest(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item?systemSku={SKU}&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(response);
             //check if an item was actually returned
@@ -47,7 +47,7 @@ namespace LightspeedNET
 
         public static Item SearchItem(string Query)
         {
-            var response = Lightspeed.AuthenticationClient.Request(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
+            var response = Lightspeed.AuthenticationClient.GetRequest(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/?description=~,%{Query}%&load_relations=[\"CustomFieldValues\",\"CustomFieldValues.value\",\"Images\"]");
             XmlDocument doc = new XmlDocument();
             doc.LoadXml(response);
             //check if an item was actually returned

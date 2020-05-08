@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 namespace LightspeedNET.Models
 {
+    [XmlType("Items")]
+    public class ItemArray
+    {
+        [XmlElement("Item")]
+        public Item[] Item { get; set; }
+    }
+
     [XmlType("Item")]
     public class Item
     {
@@ -84,7 +91,12 @@ namespace LightspeedNET.Models
         [XmlArray("Images")]
         public Image[] Images { get; set; }
         [XmlIgnore]
-        public string FirstImage { get { return Images[0].getImageUrl(); } }
+        public string FirstImage { 
+            get {
+                if (Images != null)
+                    return Images[0].getImageUrl() ?? null;
+                else return null;
+            } }
 
 
 

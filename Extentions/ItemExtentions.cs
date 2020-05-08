@@ -9,5 +9,12 @@ namespace LightspeedNET
         {
             Items.UpdateItem(item);
         }
+
+        public static Item MoveCategory(this Item item, Category category)
+        {
+            item.Category = category;
+            item.CategoryID = category.CategoryID;
+            return item;
+        }
     }
 }
