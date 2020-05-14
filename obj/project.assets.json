@@ -59,11 +59,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Noire\\source\\repos\\Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
+      "projectUniqueName": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
       "projectName": "Lightspeed.NET-net472",
-      "projectPath": "C:\\Users\\Noire\\source\\repos\\Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
+      "projectPath": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
       "packagesPath": "C:\\Users\\Noire\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Noire\\source\\repos\\Categorizer\\Lightspeed.Net\\obj\\",
+      "outputPath": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Microsoft\\Xamarin\\NuGet\\",

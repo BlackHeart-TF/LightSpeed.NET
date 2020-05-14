@@ -84,20 +84,15 @@ namespace LightspeedNET
         public static void UpdateCategory(Category category)
         {
             //var json = changes.ToJSON();
-            byte[] data;
+            string data;
             using (var ms = new MemoryStream())
             using (var x = new XmlTextWriter(ms, Encoding.ASCII))
             {
                 var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Category));
                 Deserializer.Serialize(x, category);
-                data = ms.ToArray();
+                data = Encoding.ASCII.GetString(ms.ToArray());
             }
-
-            using (var client = new System.Net.WebClient())
-            {
-                client.Headers.Add("Authorization", Lightspeed.AuthenticationClient.getAuthorizationHeader());
-                client.UploadData($"https://api.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{category.CategoryID}", "PUT", data);
-            }
+                Lightspeed.AuthenticationClient.PutRequest($"https://api.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{category.CategoryID}", data);
         }
 
         public static void DeleteCategory(Category category)
@@ -107,18 +102,11 @@ namespace LightspeedNET
             var children = allCats.Where(x => x.ParentID == category.CategoryID);
             foreach(var child in children)
             {
-                WebRequest chrequest = WebRequest.Create(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{child.CategoryID}");
-                chrequest.Method = "DELETE";
-                chrequest.Headers.Add("Authorization", Lightspeed.AuthenticationClient.getAuthorizationHeader());
-
-                chrequest.GetResponse();
+                Lightspeed.AuthenticationClient.DeleteRequest(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{child.CategoryID}");
                 
             }
-            WebRequest request = WebRequest.Create(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{category.CategoryID}");
-            request.Method = "DELETE";
-            request.Headers.Add("Authorization", Lightspeed.AuthenticationClient.getAuthorizationHeader());
+            Lightspeed.AuthenticationClient.DeleteRequest(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Category/{category.CategoryID}");
 
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
         }
 
         public static Category CreateCategory(string name, string path, int parentId = 0)

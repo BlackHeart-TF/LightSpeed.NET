@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Xml;
 using LightspeedNET.Extentions;
 using Newtonsoft.Json;
 
@@ -18,6 +19,7 @@ namespace LightspeedNET
         public string _AccessToken;
         public string _RefreshToken;
         private DateTime _ExpiresOn;
+        private RequestContext Context;
 
         public delegate void AuthComplete();
         public event AuthComplete OnAuthComplete;
@@ -59,23 +61,24 @@ namespace LightspeedNET
                     if (OnAuthFailed != null)
                         OnAuthFailed();
                     else
-                        throw new BadAuthenticationRequestException();
+                        throw new AuthException("unauthorized");
                     break;
 
                 case HttpStatusCode.BadRequest:
                     if (OnAuthFailed != null)
                         OnAuthFailed();
                     else
-                        throw new BadAuthenticationRequestException();
+                        throw new AuthException("bad request");
                     break;
 
                 case HttpStatusCode.OK:
                     OnAuthFailed += delegate { Refresh(); };
                     var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
                     var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
-                    _AccessToken = Authy["access_token"];
-                    _RefreshToken = Authy["refresh_token"];
-                    _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
+                    Context = new RequestContext();
+                    Context.AccessToken = _AccessToken = Authy["access_token"];
+                    Context.RefreshToken = _RefreshToken = Authy["refresh_token"];
+                    Context.ExpiresOn = _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
                     if (OnAuthComplete != null)
                         OnAuthComplete();
                     break;
@@ -88,64 +91,67 @@ namespace LightspeedNET
 
         public string GetRequest(string url)
         {
-            if (_ExpiresOn < DateTime.Now)
+            for (int i = 0; i < 3; i++)
             {
-                Refresh();
+                try
+                {
+                    var content = Requests.Get(Context, url);
+                    return content;
+                }
+                catch (Exception)
+                {
+                    Refresh();
+                }
             }
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
-            client.DefaultRequestHeaders.Add("Accept", "application/xml");
-        badPractise:
-            HttpResponseMessage response = Task.Run(async () => await client.GetAsync(url)).Result;
-            switch (response.StatusCode)
+            return "Error";
+        }
+        public string DeleteRequest(string url)
+        {
+            for (int i = 0; i < 3; i++)
             {
-                case HttpStatusCode.Unauthorized:
-                    if (OnAuthFailed != null)
-                    {
-                        OnAuthFailed();
-                        goto badPractise;
-                    }
-                    else
-                        throw new BadAuthenticationRequestException();
-                    //break;
-                     
-                case HttpStatusCode.OK:  
-                default:
-
-                    break;
+                try
+                {
+                    var content = Requests.Delete(Context, url);
+                    return content;
+                }
+                catch (Exception)
+                {
+                    Refresh();
+                }
             }
-            var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
-            return content;
+            return "Error";
+        }
+        public string PutRequest(string url, string content)
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                try
+                {
+                    var response = Requests.Put(Context, url, content);
+                    return response;
+                }
+                catch (Exception)
+                {
+                    Refresh();
+                }
+            }
+            return "Error";
         }
         public string PostRequest(string url, string content)
         {
-            if (_ExpiresOn < DateTime.Now)
+            for (int i = 0; i < 3; i++)
             {
-                Refresh();
+                try
+                {
+                    var response = Requests.Post(Context, url, content);
+                    return response;
+                }
+                catch (Exception)
+                {
+                    Refresh();
+                }
             }
-            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", _AccessToken);
-            client.DefaultRequestHeaders.Add("Accept", "application/xml");
-            HttpContent cont = new StringContent(content, Encoding.UTF8, "application/xml");
-        badPractise:
-            HttpResponseMessage response = Task.Run(async () => await client.PostAsync(url, cont)).Result;
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.Unauthorized:
-                    if (OnAuthFailed != null)
-                    {
-                        OnAuthFailed();
-                        goto badPractise;
-                    }
-                    else
-                        throw new BadAuthenticationRequestException();
-                //break;
-
-                case HttpStatusCode.OK:
-                default:
-
-                    break;
-            }
-            var responseText = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
-            return responseText;
+            return "Error";
         }
 
         private void Refresh()
@@ -185,8 +191,9 @@ namespace LightspeedNET
         }
     }
 
-    public class BadAuthenticationRequestException : Exception {
-        public BadAuthenticationRequestException()
+    public class AuthException : Exception {
+
+        public AuthException(string message) : base(message)
         {
         }
 

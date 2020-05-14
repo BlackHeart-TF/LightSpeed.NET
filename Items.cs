@@ -29,20 +29,16 @@ namespace LightspeedNET
         public static void UpdateItem(Item item)
         {
             //var json = changes.ToJSON();
-            byte[] data;
+            string data;
             using (var ms = new MemoryStream())
             using (var x = new XmlTextWriter(ms, Encoding.ASCII))
             {
                 var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Item));
                 Deserializer.Serialize(x, item);
-                data = ms.ToArray();
+                data = Encoding.ASCII.GetString(ms.ToArray());
             }
 
-            using (var client = new System.Net.WebClient())
-            {
-                client.Headers.Add("Authorization", Lightspeed.AuthenticationClient.getAuthorizationHeader());
-                client.UploadData($"https://api.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/{item.ItemID}", "PUT", data);
-            }
+                Lightspeed.AuthenticationClient.PutRequest($"https://api.lightspeedapp.com/API/Account/{Lightspeed.Session.SystemCustomerID}/Item/{item.ItemID}", data);
         }
 
         public static Item SearchItem(string Query)
