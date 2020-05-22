@@ -33,7 +33,6 @@ namespace LightspeedNET
             }
             catch (Exception e)
             {
-                Console.WriteLine("bitch");
                 return "http error";
             }
         }
@@ -66,7 +65,7 @@ namespace LightspeedNET
             var content = await response.Content.ReadAsStringAsync();
             if (response.Headers.Contains("X-LS-API-Bucket-Level"))
             {
-                var key = response.Headers.Where(x => x.Key == "x-ls-api-bucket-level").ToArray();
+                var key = response.Headers.Where(x => x.Key == "x-ls-api-bucket-level" || x.Key == "X-LS-API-Bucket-Level").ToArray();
                 var bucketlevel = key[0].Value.First();
                 Bucket = new Bucket(bucketlevel);
             }

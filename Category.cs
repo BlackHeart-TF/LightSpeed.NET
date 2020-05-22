@@ -53,7 +53,7 @@ namespace LightspeedNET
             categories.AddRange(category.Category);
             if (count > 100)
             {
-                for (int i = 100; i <= count; i = i + 100)
+                for (int i = 100; i <= count-1; i = i + 100)
                 {
                     response = Lightspeed.AuthenticationClient.GetRequest(Lightspeed.host + $"/API/Account/{Lightspeed.Session.SystemCustomerID}/Category?offset={i}");
                     TextReader newReader = new StringReader(response);
