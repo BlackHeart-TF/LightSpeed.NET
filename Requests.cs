@@ -17,7 +17,6 @@ namespace LightspeedNET
 
         public static void setup(RequestContext context)
         {
-
             if (DateTime.Compare(context.ExpiresOn, DateTime.Now) < 0)
             {
                 throw new ExpiredTokenException();
@@ -26,10 +25,17 @@ namespace LightspeedNET
             http.DefaultRequestHeaders.Add("Accept", "application/xml");
         }
         public static string Get(RequestContext context, string url)
-        {
+        { 
+            try{
             setup(context);
-            HttpResponseMessage response = Task.Run(async () => await http.GetAsync(url)).Result;
-            return ParseResponse(response);
+        HttpResponseMessage response = Task.Run(async () => await http.GetAsync(url)).Result;
+            return ParseResponse(response).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("bitch");
+                return "http error";
+            }
         }
 
         public static string Post(RequestContext context, string url, string content)
@@ -37,14 +43,14 @@ namespace LightspeedNET
             setup(context);
             HttpContent cont = new StringContent(content, Encoding.UTF8, "application/xml");
             HttpResponseMessage response = Task.Run(async () => await http.PostAsync(url, cont)).Result;
-            return ParseResponse(response);
+            return ParseResponse(response).Result;
         }
 
         public static string Delete(RequestContext context, string url)
         {
             setup(context);
             HttpResponseMessage response = Task.Run(async () => await http.DeleteAsync(url)).Result;
-            return ParseResponse(response);
+            return ParseResponse(response).Result;
         }
 
         public static string Put(RequestContext context, string url,string content)
@@ -52,14 +58,18 @@ namespace LightspeedNET
             setup(context);
             HttpContent cont = new StringContent(content, Encoding.UTF8, "application/xml");
             HttpResponseMessage response = Task.Run(async () => await http.PutAsync(url,cont)).Result;
-            return ParseResponse(response);
+            return ParseResponse(response).Result;
         }
-        private static string ParseResponse(HttpResponseMessage response)
+        private static async Task<string> ParseResponse(HttpResponseMessage response)
         {
             
-            var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
+            var content = await response.Content.ReadAsStringAsync();
             if (response.Headers.Contains("X-LS-API-Bucket-Level"))
-                Bucket = new Bucket(response.Headers.Where(x => x.Key == "X-LS-API-Bucket-Level").First().Value.First());
+            {
+                var key = response.Headers.Where(x => x.Key == "x-ls-api-bucket-level").ToArray();
+                var bucketlevel = key[0].Value.First();
+                Bucket = new Bucket(bucketlevel);
+            }
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:

@@ -14,7 +14,13 @@ namespace LightspeedNET
         public Bucket(string value)
         {
             var split = value.Split('/');
-            Value = int.Parse(split[0]);
+            int valueint;
+            var passed = int.TryParse(split[0],out valueint);
+            if (!passed)
+            {
+                var split2 = split[0].Split('.');
+                valueint = int.Parse(split2[0]) + 1;
+            }
             Max = int.Parse(split[1]);
         }
         public override string ToString()

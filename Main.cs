@@ -36,8 +36,10 @@ namespace LightspeedNET
 
             TextReader TextReader = new StringReader(response);
             var Deserializer = new System.Xml.Serialization.XmlSerializer(typeof(Session));
-            return Session = ((Session)Deserializer.Deserialize(TextReader));
-
+            try
+            {
+                return Session = ((Session)Deserializer.Deserialize(TextReader));
+            }catch (Exception e) { Console.WriteLine(e.Message); return new Session(); }
         }
         public Employee GetEmployee(int id)
         {

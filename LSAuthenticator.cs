@@ -54,8 +54,16 @@ namespace LightspeedNET
             Headers.Add("password", password);
             Headers.Add("Accept", "application/json");
             var EncHeaders = new FormUrlEncodedContent(Headers);
-            var response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token_v2.php", EncHeaders)).Result;
-            switch (response.StatusCode)
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token_v2.php", EncHeaders)).Result;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+                switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
                     if (OnAuthFailed != null)
@@ -76,6 +84,7 @@ namespace LightspeedNET
                     var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
                     var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
                     Context = new RequestContext();
+
                     Context.AccessToken = _AccessToken = Authy["access_token"];
                     Context.RefreshToken = _RefreshToken = Authy["refresh_token"];
                     Context.ExpiresOn = _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
@@ -98,9 +107,11 @@ namespace LightspeedNET
                     var content = Requests.Get(Context, url);
                     return content;
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
+                    Console.WriteLine(e.Message);
                     Refresh();
+                    Task.Delay(200).Wait();
                 }
             }
             return "Error";
@@ -163,7 +174,11 @@ namespace LightspeedNET
             Headers.Add("Accept", "application/json");
             Headers.Add("refresh_token", _RefreshToken);
             var EncHeaders = new FormUrlEncodedContent(Headers);
-            var response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token.php", EncHeaders)).Result;
+            HttpResponseMessage response = new HttpResponseMessage();
+            try
+            {
+                response = Task.Run(async () => await client.PostAsync(Lightspeed.host + "/oauth/access_token.php", EncHeaders)).Result;
+            } catch (Exception e) { Console.WriteLine(e.Message); }
             switch (response.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
@@ -174,8 +189,10 @@ namespace LightspeedNET
                 case HttpStatusCode.OK:
                     var content = Task.Run(async () => await response.Content.ReadAsStringAsync()).Result;
                     var Authy = JsonConvert.DeserializeObject<Dictionary<string, string>>(content);
-                    _AccessToken = Authy["access_token"];
-                    _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
+                    if (Context == null)
+                        Context = new RequestContext();
+                    Context.AccessToken = _AccessToken = Authy["access_token"];
+                    Context.ExpiresOn = _ExpiresOn = DateTime.Now.AddSeconds(double.Parse(Authy["expires_in"]));
                     if (OnRefresh != null)
                         OnRefresh();
                     break;

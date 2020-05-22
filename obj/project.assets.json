@@ -1,14 +1,14 @@
 {
   "version": 3,
   "targets": {
-    ".NETFramework,Version=v4.7.2": {
+    ".NETStandard,Version=v2.1": {
       "Newtonsoft.Json/12.0.3": {
         "type": "package",
         "compile": {
-          "lib/net45/Newtonsoft.Json.dll": {}
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         },
         "runtime": {
-          "lib/net45/Newtonsoft.Json.dll": {}
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
       }
     }
@@ -47,42 +47,33 @@
     }
   },
   "projectFileDependencyGroups": {
-    ".NETFramework,Version=v4.7.2": [
+    ".NETStandard,Version=v2.1": [
       "Newtonsoft.Json >= 12.0.3"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Noire\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "/Users/bgpowersports/.nuget/packages/": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
-      "projectName": "Lightspeed.NET-net472",
-      "projectPath": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\Lightspeed.NET-net472.csproj",
-      "packagesPath": "C:\\Users\\Noire\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Noire\\source\\repos\\LightSpeed-Categorizer\\Lightspeed.Net\\obj\\",
+      "projectUniqueName": "/Users/bgpowersports/Projects/WarpDrive-ng/Lightspeed.Net/Lightspeed.NET.csproj",
+      "projectName": "Lightspeed.NET",
+      "projectPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Lightspeed.Net/Lightspeed.NET.csproj",
+      "packagesPath": "/Users/bgpowersports/.nuget/packages/",
+      "outputPath": "/Users/bgpowersports/Projects/WarpDrive-ng/Lightspeed.Net/obj/",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
-      ],
       "configFilePaths": [
-        "C:\\Users\\Noire\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "/Users/bgpowersports/.config/NuGet/NuGet.Config"
       ],
       "originalTargetFrameworks": [
-        "net472"
+        "netstandard2.1"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
-        "net472": {
+        "netstandard2.1": {
           "projectReferences": {}
         }
       },
@@ -93,14 +84,29 @@
       }
     },
     "frameworks": {
-      "net472": {
+      "netstandard2.1": {
         "dependencies": {
           "Newtonsoft.Json": {
             "target": "Package",
             "version": "[12.0.3, )"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.201\\RuntimeIdentifierGraph.json"
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "NETStandard.Library": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "/usr/local/share/dotnet/sdk/3.1.300/RuntimeIdentifierGraph.json"
       }
     }
   }
